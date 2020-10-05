@@ -11,7 +11,7 @@ type Book struct{
 	ID string `json:id`
 	Title string `json:title`
 	Description string `json:description`
-	Author string `json:author`
+	Price int `json:price`
 }
 type Data struct{
 	Result string `json:result`
@@ -46,7 +46,7 @@ func getAllBooks(c *gin.Context) {
 	defer result.Close()
 	for result.Next() {
 		var book Book
-		err := result.Scan(&book.ID, &book.Title,&book.Description,&book.Author)
+		err := result.Scan(&book.ID, &book.Title,&book.Description,&book.Price)
 		if err != nil {
 			panic(err.Error())
 		}
@@ -72,7 +72,7 @@ func getBookById(c *gin.Context) {
 	defer result.Close()
 	var book Book
 	for result.Next() {
-		err := result.Scan(&book.ID, &book.Title,&book.Description,&book.Author)
+		err := result.Scan(&book.ID, &book.Title,&book.Description,&book.Price)
 		if err != nil {
 			println(err.Error())
 		}
@@ -87,7 +87,7 @@ func getBookById(c *gin.Context) {
 }
 func createBook(c *gin.Context) {
 	var book Book
-	stmt, err := db.Prepare("INSERT INTO books(titleBook,descriptionBook,authorBook) VALUES(?,?,?)")
+	stmt, err := db.Prepare("INSERT INTO books(titleBook,descriptionBook,priceBook) VALUES(?,?,?)")
 	if err != nil {
 		println(err.Error())
 	}
@@ -96,7 +96,7 @@ func createBook(c *gin.Context) {
 		println(err.Error())
 	}
 
-	_, err = stmt.Exec(book.Title,book.Description,book.Author)
+	_, err = stmt.Exec(book.Title,book.Description,book.Price)
 	if err != nil {
 		println(err.Error())
 	}
@@ -121,7 +121,7 @@ func updateBook(c *gin.Context) {
 	if err != nil {
 		println("Error al preparar query", err.Error())
 	}
-	_, e := stmt.Exec(book.Title, book.Description, book.Author, book.ID)
+	_, e := stmt.Exec(book.Title, book.Description, book.Price, book.ID)
 	if e != nil {
 		println( e.Error())
 	}
